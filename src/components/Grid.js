@@ -25,6 +25,27 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
         }
     }
 
+    let adjacentMineCount
+    for (let i = 0; i < rowCount; i++) {
+        for (let j = 0; j < colCount; j++) {
+            adjacentMineCount = 0
+            if (!(gridArr[i][j] === "mine")) {
+                for (let k = -1; k < 2; k++) {
+                    for (let l = -1; l < 2; l++) {
+                        console.log(k,l)
+                        if (gridArr[i+k] === undefined || gridArr[i+k][j+l] === undefined){
+                            continue
+                        }
+                        if (gridArr[i + k][j + l] === "mine") {
+                            adjacentMineCount++
+                        }
+                    }
+                }
+            gridArr[i][j] = adjacentMineCount
+            }
+        }
+    }
+
     return gridArr
 }
 
@@ -32,7 +53,7 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
 
-    const arr = makeRandomGrid(2, 3, 1)
+    const arr = makeRandomGrid(5, 5, 2)
     console.table(arr)
 
     return (
