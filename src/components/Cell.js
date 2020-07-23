@@ -18,7 +18,7 @@ function Cell(props) {
                     event.preventDefault();
                 }}
                 onClick={(event) => {
-                    if (!isRevealed) {
+                    if (!isRevealed && !isFlagged) {
                         reveal(true)
                     }
                 }}
