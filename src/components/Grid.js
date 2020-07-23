@@ -10,7 +10,7 @@ function getRandomInt(min, max) {
 }
 
 function makeRandomGrid(rowCount, colCount, mineCount) {
-    let gridArr = [...Array(rowCount)].map(e => Array(colCount).fill(0))
+    let gridArr = [...Array(rowCount)].map(e => Array(colCount))
 
     let row, col, placed
     for (let i = 0; i < mineCount; i++) {
@@ -18,7 +18,7 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
         while (!placed) {
             row = getRandomInt(0, rowCount)
             col = getRandomInt(0, colCount)
-            if (!!!gridArr[row][col]) {
+            if (gridArr[row][col] === undefined) {
                 gridArr[row][col] = "mine"
                 placed = true
             }
