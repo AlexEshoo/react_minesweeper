@@ -2,9 +2,20 @@ import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
 
 function Cell(props) {
-    const isEmpty = props.number === ''
+    const isEmpty = props.number === 0
     const [isRevealed, reveal] = useState(false)
     const [isFlagged, flag] = useState(false)
+
+    let buttonText = ""
+    if (isFlagged) {
+        buttonText = "FLAG"
+    } else if (isRevealed) {
+        if (props.number === "mine") {
+            buttonText = "MINE"
+        } else if (props.number > 0) {
+            buttonText = props.number
+        }
+    }
 
     return (
         <div>
@@ -24,7 +35,7 @@ function Cell(props) {
                     }
                 }}
             >
-                {isFlagged ? 'flag' : (isRevealed ? props.number : "")}
+                {buttonText}
             </Button>
         </div>
     )

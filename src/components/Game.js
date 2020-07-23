@@ -6,7 +6,7 @@ function Game(props) {
         <MineGrid
             rows={10}
             cols={10}
-            mineCount={3}
+            mineCount={7}
         />
     )
 }
