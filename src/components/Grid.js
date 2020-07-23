@@ -32,8 +32,7 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
             if (!(gridArr[i][j] === "mine")) {
                 for (let k = -1; k < 2; k++) {
                     for (let l = -1; l < 2; l++) {
-                        console.log(k,l)
-                        if (gridArr[i+k] === undefined || gridArr[i+k][j+l] === undefined){
+                        if (gridArr[i + k] === undefined || gridArr[i + k][j + l] === undefined) {
                             continue
                         }
                         if (gridArr[i + k][j + l] === "mine") {
@@ -41,7 +40,7 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
                         }
                     }
                 }
-            gridArr[i][j] = adjacentMineCount
+                gridArr[i][j] = adjacentMineCount
             }
         }
     }
@@ -53,8 +52,7 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
 
-    const arr = makeRandomGrid(5, 5, 2)
-    console.table(arr)
+    const arr = makeRandomGrid(props.rows, props.cols, props.mineCount)
 
     return (
         <Grid
@@ -63,24 +61,15 @@ function MineGrid(props) {
             justify="center"
             alignItems="center"
         >
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
-            <Grid container item>
-                <Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/><Cell number={1}/>
-            </Grid>
+            {arr.map((e) => (
+                <Grid container item>
+                    {e.map((g) => (
+                        <Cell
+                            number={g}
+                        />
+                    ))}
+                </Grid>
+            ))}
         </Grid>
     )
 }
