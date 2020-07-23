@@ -11,6 +11,7 @@ function Cell(props) {
             <Button
                 className="cellButton"
                 variant="contained"
+                color={isRevealed ? "default" : "primary"}
                 onContextMenu={(event) => {
                     if (!isRevealed) {
                         flag(!isFlagged);
