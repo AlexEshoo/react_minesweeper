@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-color: #404040;
+  min-height: 100vh;
 }
 
 .cellButton {

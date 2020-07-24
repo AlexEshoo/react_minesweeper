@@ -1,10 +1,14 @@
 import React from 'react';
 import './App.css';
 import Game from "./components/Game";
+import Container from "@material-ui/core/Container";
 
 function App() {
   return (
-      <Game/>
+      <Container className="App" maxWidth={null}>
+        <Game/>
+      </Container>
+
   );
 }
 
