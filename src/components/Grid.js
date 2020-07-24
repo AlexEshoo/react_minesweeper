@@ -19,28 +19,37 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
             row = getRandomInt(0, rowCount)
             col = getRandomInt(0, colCount)
             if (gridArr[row][col] === undefined) {
-                gridArr[row][col] = "mine"
+                gridArr[row][col] = <Cell number="mine"/>
                 placed = true
             }
         }
     }
 
-    let adjacentMineCount
+    let adjacentMineCount, neighbor
     for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
             adjacentMineCount = 0
-            if (!(gridArr[i][j] === "mine")) {
+            console.log(gridArr[i][j])
+            if (gridArr[i][j] === undefined) {
                 for (let k = -1; k < 2; k++) {
                     for (let l = -1; l < 2; l++) {
-                        if (gridArr[i + k] === undefined || gridArr[i + k][j + l] === undefined) {
+                        if (
+                            i + k < 0
+                            || i + k > rowCount - 1
+                            || j + l < 0
+                            || j + l > colCount - 1
+                        ) {
                             continue
                         }
-                        if (gridArr[i + k][j + l] === "mine") {
+                        neighbor = gridArr[i + k][j + l]
+                        if (React.isValidElement(neighbor) && neighbor.props.number === "mine") {
+                            console.log("here")
                             adjacentMineCount++
                         }
                     }
                 }
-                gridArr[i][j] = adjacentMineCount
+                // console.log(adjacentMineCount)
+                gridArr[i][j] = <Cell number={adjacentMineCount}/>
             }
         }
     }
@@ -48,6 +57,8 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
     return gridArr
 }
 
+function onReveal() {
+}
 
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
@@ -63,11 +74,7 @@ function MineGrid(props) {
         >
             {arr.map((e) => (
                 <Grid container item>
-                    {e.map((g) => (
-                        <Cell
-                            number={g}
-                        />
-                    ))}
+                    {e}
                 </Grid>
             ))}
         </Grid>
