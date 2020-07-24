@@ -19,7 +19,13 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
             row = getRandomInt(0, rowCount)
             col = getRandomInt(0, colCount)
             if (gridArr[row][col] === undefined) {
-                gridArr[row][col] = <Cell number="mine"/>
+                gridArr[row][col] =
+                    <Cell
+                        key={row.toString() + ',' + col.toString()}
+                        number="mine"
+                        x={row}
+                        y={col}
+                    />
                 placed = true
             }
         }
@@ -29,7 +35,6 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
     for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
             adjacentMineCount = 0
-            console.log(gridArr[i][j])
             if (gridArr[i][j] === undefined) {
                 for (let k = -1; k < 2; k++) {
                     for (let l = -1; l < 2; l++) {
@@ -43,13 +48,17 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
                         }
                         neighbor = gridArr[i + k][j + l]
                         if (React.isValidElement(neighbor) && neighbor.props.number === "mine") {
-                            console.log("here")
                             adjacentMineCount++
                         }
                     }
                 }
-                // console.log(adjacentMineCount)
-                gridArr[i][j] = <Cell number={adjacentMineCount}/>
+                gridArr[i][j] =
+                    <Cell
+                        key={i.toString() + ',' + j.toString()}
+                        number={adjacentMineCount}
+                        x={i}
+                        y={j}
+                    />
             }
         }
     }
@@ -62,7 +71,6 @@ function onReveal() {
 
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
-
     const arr = makeRandomGrid(props.rows, props.cols, props.mineCount)
 
     return (
@@ -73,7 +81,7 @@ function MineGrid(props) {
             alignItems="center"
         >
             {arr.map((e) => (
-                <Grid container item>
+                <Grid key={`row-${arr.indexOf(e)}`} container item>
                     {e}
                 </Grid>
             ))}
