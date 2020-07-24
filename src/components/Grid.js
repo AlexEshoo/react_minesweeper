@@ -10,7 +10,16 @@ function getRandomInt(min, max) {
 }
 
 function makeRandomGrid(rowCount, colCount, mineCount) {
-    let gridArr = [...Array(rowCount)].map(e => Array(colCount))
+    let gridArr = [...Array(rowCount)].map(e => Array(colCount).fill().map(() => (
+        {
+            x: null,
+            y: null,
+            isMine: false,
+            adjacentMineCount: 0,
+            isFlagged: false,
+            isRevealed: false
+        }
+    )))
 
     let row, col, placed
     for (let i = 0; i < mineCount; i++) {
@@ -18,24 +27,18 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
         while (!placed) {
             row = getRandomInt(0, rowCount)
             col = getRandomInt(0, colCount)
-            if (gridArr[row][col] === undefined) {
-                gridArr[row][col] =
-                    <Cell
-                        key={row.toString() + ',' + col.toString()}
-                        number="mine"
-                        x={row}
-                        y={col}
-                    />
+            if (!gridArr[row][col].isMine) {
+                gridArr[row][col].isMine = true
                 placed = true
             }
         }
     }
 
-    let adjacentMineCount, neighbor
+    let currentCell, neighbor
     for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
-            adjacentMineCount = 0
-            if (gridArr[i][j] === undefined) {
+            currentCell = gridArr[i][j]
+            if (!currentCell.isMine) {
                 for (let k = -1; k < 2; k++) {
                     for (let l = -1; l < 2; l++) {
                         if (
@@ -47,18 +50,11 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
                             continue
                         }
                         neighbor = gridArr[i + k][j + l]
-                        if (React.isValidElement(neighbor) && neighbor.props.number === "mine") {
-                            adjacentMineCount++
+                        if (neighbor.isMine) {
+                            currentCell.adjacentMineCount++
                         }
                     }
                 }
-                gridArr[i][j] =
-                    <Cell
-                        key={i.toString() + ',' + j.toString()}
-                        number={adjacentMineCount}
-                        x={i}
-                        y={j}
-                    />
             }
         }
     }
@@ -67,11 +63,14 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
 }
 
 function onReveal() {
+
 }
 
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
-    const arr = makeRandomGrid(props.rows, props.cols, props.mineCount)
+    const [cells, setCells] = useState(makeRandomGrid(props.rows, props.cols, props.mineCount))
+
+    //console.log(cells)
 
     return (
         <Grid
@@ -80,9 +79,18 @@ function MineGrid(props) {
             justify="center"
             alignItems="center"
         >
-            {arr.map((e) => (
-                <Grid key={`row-${arr.indexOf(e)}`} container item>
-                    {e}
+            {cells.map((e) => (
+                <Grid key={`row-${cells.indexOf(e)}`} container item>
+                    {e.map((g) => (
+                        <Cell
+                            isMine={g.isMine}
+                            adjacentMineCount={g.adjacentMineCount}
+                            x={g.x}
+                            y={g.y}
+                            flagged={g.isFlagged}
+                            revelead={g.isRevealed}
+                        />
+                    ))}
                 </Grid>
             ))}
         </Grid>
