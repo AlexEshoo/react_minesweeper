@@ -3,11 +3,11 @@ import Cell from "./Cell";
 import Grid from '@material-ui/core/Grid'
 
 
-Array.prototype.clone = function() {
+Array.prototype.clone = function () {
     var arr = [];
-    for( var i = 0; i < this.length; i++ ) {
+    for (var i = 0; i < this.length; i++) {
 //      if( this[i].constructor == this.constructor ) {
-        if( this[i].clone ) {
+        if (this[i].clone) {
             //recursion
             arr[i] = this[i].clone();
             break;
@@ -30,15 +30,15 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
         .map((e, i) =>
             Array(colCount).fill()
                 .map((g, j) => (
-        {
-            x: i,
-            y: j,
-            isMine: false,
-            adjacentMineCount: 0,
-            isFlagged: false,
-            isRevealed: false
-        }
-    )))
+                    {
+                        x: i,
+                        y: j,
+                        isMine: false,
+                        adjacentMineCount: 0,
+                        isFlagged: false,
+                        isRevealed: false
+                    }
+                )))
 
     let row, col, placed
     for (let i = 0; i < mineCount; i++) {
@@ -81,6 +81,26 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
     return gridArr
 }
 
+function revealNeighborZeros(cells, currentCell) {
+    console.log(currentCell)
+    for (let k = -1; k < 2; k++) {
+        for (let l = -1; l < 2; l++) {
+            if (
+                currentCell.x + k < 0
+                || currentCell.x + k > cells.length - 1
+                || currentCell.y + l < 0
+                || currentCell.y + l > cells[0].length - 1
+            ) {
+                continue
+            }
+            let neighbor = cells[currentCell.x + k][currentCell.y + l]
+            if (neighbor.adjacentMineCount === 0 && !neighbor.isRevealed) {
+                neighbor.isRevealed = true
+                revealNeighborZeros(cells, neighbor)
+            }
+        }
+    }
+}
 
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
@@ -88,9 +108,12 @@ function MineGrid(props) {
 
     function handleClick(x, y) {
         let cell = cells[x][y]
-        let newCells = JSON.parse(JSON.stringify(cells))
+        let newCells = JSON.parse(JSON.stringify(cells))  // Probably not the fastest deep copy method, but it works
         if (!cell.isRevealed && !cell.isFlagged) {
             newCells[x][y].isRevealed = true
+            if (cell.adjacentMineCount === 0) {
+                revealNeighborZeros(newCells, cell)
+            }
             setCells(newCells)
         }
     }
