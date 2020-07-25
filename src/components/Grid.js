@@ -94,9 +94,11 @@ function revealNeighborZeros(cells, currentCell) {
                 continue
             }
             let neighbor = cells[currentCell.x + k][currentCell.y + l]
-            if (neighbor.adjacentMineCount === 0 && !neighbor.isRevealed) {
+            if (!neighbor.isRevealed) {
                 neighbor.isRevealed = true
-                revealNeighborZeros(cells, neighbor)
+                if (neighbor.adjacentMineCount === 0) {
+                    revealNeighborZeros(cells, neighbor)
+                }
             }
         }
     }
