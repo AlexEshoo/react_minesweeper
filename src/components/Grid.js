@@ -83,7 +83,6 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
 
 
 function MineGrid(props) {
-    console.log("render")
     const [mineCount, setMineCount] = useState(props.mineCount)
     const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
 
@@ -92,7 +91,6 @@ function MineGrid(props) {
         let newCells = JSON.parse(JSON.stringify(cells))
         if (!cell.isRevealed && !cell.isFlagged) {
             newCells[x][y].isRevealed = true
-            console.log(newCells[x][y])
             setCells(newCells)
         }
     }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 
 function Cell(props) {
@@ -13,7 +13,6 @@ function Cell(props) {
         }
     }
 
-    console.log(buttonText)
     return (
         <div>
             <Button
