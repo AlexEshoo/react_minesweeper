@@ -20,10 +20,7 @@ function Cell(props) {
                 variant="contained"
                 color={props.isRevealed ? "danger" : "primary"}
                 onContextMenu={(event) => {
-                    if (!props.isRevealed) {
-                        // todo
-                    }
-                    event.preventDefault();
+                    props.onContextMenu(event, props.x, props.y)
                 }}
                 onClick={(event) => {
                     props.onClick(props.x, props.y)

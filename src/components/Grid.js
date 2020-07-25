@@ -2,22 +2,6 @@ import React, {useState} from 'react'
 import Cell from "./Cell";
 import Grid from '@material-ui/core/Grid'
 
-
-Array.prototype.clone = function () {
-    var arr = [];
-    for (var i = 0; i < this.length; i++) {
-//      if( this[i].constructor == this.constructor ) {
-        if (this[i].clone) {
-            //recursion
-            arr[i] = this[i].clone();
-            break;
-        }
-        arr[i] = this[i];
-    }
-    return arr;
-}
-
-
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -82,7 +66,6 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
 }
 
 function revealNeighborZeros(cells, currentCell) {
-    console.log(currentCell)
     for (let k = -1; k < 2; k++) {
         for (let l = -1; l < 2; l++) {
             if (
@@ -107,15 +90,24 @@ function revealNeighborZeros(cells, currentCell) {
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
     const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
+    let newCells = JSON.parse(JSON.stringify(cells))  // Probably not the fastest deep copy method, but it works
 
     function handleClick(x, y) {
         let cell = cells[x][y]
-        let newCells = JSON.parse(JSON.stringify(cells))  // Probably not the fastest deep copy method, but it works
         if (!cell.isRevealed && !cell.isFlagged) {
             newCells[x][y].isRevealed = true
             if (cell.adjacentMineCount === 0) {
                 revealNeighborZeros(newCells, cell)
             }
+            setCells(newCells)
+        }
+    }
+
+    function handleContextMenu(event, x, y) {
+        event.preventDefault()
+        let cell = cells[x][y]
+        if (!cell.isRevealed) {
+            newCells[x][y].isFlagged = !cell.isFlagged
             setCells(newCells)
         }
     }
@@ -139,6 +131,7 @@ function MineGrid(props) {
                             isFlagged={g.isFlagged}
                             isRevealed={g.isRevealed}
                             onClick={handleClick}
+                            onContextMenu={handleContextMenu}
                         />
                     ))}
                 </Grid>
