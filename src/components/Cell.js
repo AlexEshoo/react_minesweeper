@@ -2,13 +2,10 @@ import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
 
 function Cell(props) {
-    const [isRevealed, reveal] = useState(props.revelead)
-    const [isFlagged, flag] = useState(props.flagged)
-
     let buttonText = ""
-    if (isFlagged) {
+    if (props.isFlagged) {
         buttonText = "FLAG"
-    } else if (isRevealed) {
+    } else if (props.isRevealed) {
         if (props.isMine) {
             buttonText = "MINE"
         } else if (props.adjacentMineCount > 0) {
@@ -16,22 +13,21 @@ function Cell(props) {
         }
     }
 
+    console.log(buttonText)
     return (
         <div>
             <Button
                 className="cellButton"
                 variant="contained"
-                color={isRevealed ? "default" : "primary"}
+                color={props.isRevealed ? "danger" : "primary"}
                 onContextMenu={(event) => {
-                    if (!isRevealed) {
-                        flag(!isFlagged);
+                    if (!props.isRevealed) {
+                        // todo
                     }
                     event.preventDefault();
                 }}
                 onClick={(event) => {
-                    if (!isRevealed && !isFlagged) {
-                        reveal(true)
-                    }
+                    props.onClick(props.x, props.y)
                 }}
             >
                 {buttonText}

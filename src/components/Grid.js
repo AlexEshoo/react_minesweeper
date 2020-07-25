@@ -3,6 +3,21 @@ import Cell from "./Cell";
 import Grid from '@material-ui/core/Grid'
 
 
+Array.prototype.clone = function() {
+    var arr = [];
+    for( var i = 0; i < this.length; i++ ) {
+//      if( this[i].constructor == this.constructor ) {
+        if( this[i].clone ) {
+            //recursion
+            arr[i] = this[i].clone();
+            break;
+        }
+        arr[i] = this[i];
+    }
+    return arr;
+}
+
+
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -10,10 +25,14 @@ function getRandomInt(min, max) {
 }
 
 function makeRandomGrid(rowCount, colCount, mineCount) {
-    let gridArr = [...Array(rowCount)].map(e => Array(colCount).fill().map(() => (
+    // Make a 2d array of objects representing cell states
+    let gridArr = [...Array(rowCount)]
+        .map((e, i) =>
+            Array(colCount).fill()
+                .map((g, j) => (
         {
-            x: null,
-            y: null,
+            x: i,
+            y: j,
             isMine: false,
             adjacentMineCount: 0,
             isFlagged: false,
@@ -62,15 +81,21 @@ function makeRandomGrid(rowCount, colCount, mineCount) {
     return gridArr
 }
 
-function onReveal() {
-
-}
 
 function MineGrid(props) {
+    console.log("render")
     const [mineCount, setMineCount] = useState(props.mineCount)
-    const [cells, setCells] = useState(makeRandomGrid(props.rows, props.cols, props.mineCount))
+    const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
 
-    //console.log(cells)
+    function handleClick(x, y) {
+        let cell = cells[x][y]
+        let newCells = JSON.parse(JSON.stringify(cells))
+        if (!cell.isRevealed && !cell.isFlagged) {
+            newCells[x][y].isRevealed = true
+            console.log(newCells[x][y])
+            setCells(newCells)
+        }
+    }
 
     return (
         <Grid
@@ -83,12 +108,14 @@ function MineGrid(props) {
                 <Grid key={`row-${cells.indexOf(e)}`} container item>
                     {e.map((g) => (
                         <Cell
+                            key={`${g.x},${g.y}`}
                             isMine={g.isMine}
                             adjacentMineCount={g.adjacentMineCount}
                             x={g.x}
                             y={g.y}
-                            flagged={g.isFlagged}
-                            revelead={g.isRevealed}
+                            isFlagged={g.isFlagged}
+                            isRevealed={g.isRevealed}
+                            onClick={handleClick}
                         />
                     ))}
                 </Grid>
