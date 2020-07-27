@@ -87,6 +87,17 @@ function revealNeighborZeros(cells, currentCell) {
     }
 }
 
+function revealMines(cells) {
+    for (let x = 0; x < cells.length; x++) {
+        for (let y = 0; y < cells[0].length; y++) {
+            if (cells[x][y].isMine) {
+                cells[x][y].isFlagged = false
+                cells[x][y].isRevealed = true
+            }
+        }
+    }
+}
+
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
     const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
@@ -96,10 +107,13 @@ function MineGrid(props) {
         let cell = cells[x][y]
         if (!cell.isRevealed && !cell.isFlagged) {
             newCells[x][y].isRevealed = true
-            if (cell.adjacentMineCount === 0) {
+            if (cell.adjacentMineCount === 0 && !cell.isMine) {
                 revealNeighborZeros(newCells, cell)
             }
             setCells(newCells)
+        }
+        if (cell.isMine) {
+            revealMines(newCells)
         }
     }
 

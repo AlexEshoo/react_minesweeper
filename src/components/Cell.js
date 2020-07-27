@@ -3,11 +3,14 @@ import Button from "@material-ui/core/Button";
 
 function Cell(props) {
     let buttonText = ""
+    let buttonColor = "primary"
     if (props.isFlagged) {
         buttonText = "FLAG"
     } else if (props.isRevealed) {
+        buttonColor = "default"
         if (props.isMine) {
             buttonText = "MINE"
+            buttonColor = "secondary"
         } else if (props.adjacentMineCount > 0) {
             buttonText = props.adjacentMineCount
         }
@@ -18,7 +21,7 @@ function Cell(props) {
             <Button
                 className="cellButton"
                 variant="contained"
-                color={props.isRevealed ? "danger" : "primary"}
+                color={buttonColor}
                 onContextMenu={(event) => {
                     props.onContextMenu(event, props.x, props.y)
                 }}
