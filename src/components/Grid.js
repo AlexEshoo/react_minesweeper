@@ -106,14 +106,14 @@ function MineGrid(props) {
     function handleClick(x, y) {
         let cell = cells[x][y]
         if (!cell.isRevealed && !cell.isFlagged) {
+            if (cell.isMine) {
+                revealMines(newCells)
+            }
             newCells[x][y].isRevealed = true
             if (cell.adjacentMineCount === 0 && !cell.isMine) {
                 revealNeighborZeros(newCells, cell)
             }
             setCells(newCells)
-        }
-        if (cell.isMine) {
-            revealMines(newCells)
         }
     }
 
