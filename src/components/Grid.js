@@ -98,16 +98,38 @@ function revealMines(cells) {
     }
 }
 
+function checkWin(cells) {
+    for (let x = 0; x < cells.length; x++) {
+        for (let y = 0; y < cells[0].length; y++) {
+            if (!cells[x][y].isMine) {
+                if (!cells[x][y].isRevealed) {
+                    return false
+                }
+            } else {
+                if (!cells[x][y].isFlagged) {
+                    return false
+                }
+            }
+        }
+    }
+    return true
+}
+
 function MineGrid(props) {
     const [mineCount, setMineCount] = useState(props.mineCount)
     const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
     let newCells = JSON.parse(JSON.stringify(cells))  // Probably not the fastest deep copy method, but it works
+
+    if (checkWin(cells)) {
+        props.win()
+    }
 
     function handleClick(x, y) {
         let cell = cells[x][y]
         if (!cell.isRevealed && !cell.isFlagged) {
             if (cell.isMine) {
                 revealMines(newCells)
+                props.lose()
             }
             newCells[x][y].isRevealed = true
             if (cell.adjacentMineCount === 0 && !cell.isMine) {
