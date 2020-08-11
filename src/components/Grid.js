@@ -116,7 +116,7 @@ function checkWin(cells) {
 }
 
 function MineGrid(props) {
-    const [mineCount, setMineCount] = useState(props.mineCount)
+    const [flaggedCount, setFlaggedCount] = useState(0)
     const [cells, setCells] = useState(() => makeRandomGrid(props.rows, props.cols, props.mineCount))
     let newCells = JSON.parse(JSON.stringify(cells))  // Probably not the fastest deep copy method, but it works
 
@@ -145,10 +145,13 @@ function MineGrid(props) {
         if (!cell.isRevealed) {
             newCells[x][y].isFlagged = !cell.isFlagged
             setCells(newCells)
+            setFlaggedCount(cell.isFlagged ? flaggedCount - 1: flaggedCount + 1)
         }
     }
 
     return (
+        <div>
+            {`Flagged: ${flaggedCount}/${props.mineCount}`}
         <Grid
             container
             direction="row"
@@ -173,6 +176,7 @@ function MineGrid(props) {
                 </Grid>
             ))}
         </Grid>
+        </div>
     )
 }
 
